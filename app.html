@@ -1,0 +1,47 @@
+<div id="chat-widget" style="max-width: 600px; margin: auto; font-family: Arial, sans-serif;">
+  <h3>Confess2Pope</h3>
+  <textarea id="userInput" rows="4" style="width: 100%; padding: 8px;" placeholder="Confess your sins..."></textarea>
+  <button onclick="sendInput()" style="margin-top: 10px; padding: 10px 20px;">Send</button>
+  <div id="response" style="margin-top: 20px; white-space: pre-wrap;"></div>
+</div>
+<script>
+  async function sendInput() {
+    const userInput = document.getElementById("userInput").value;
+    const responseDiv = document.getElementById("response");
+    responseDiv.innerHTML = "<em>⏳ Waiting for response...</em>";
+
+    try {
+      const response = await fetch("http://localhost:5000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_input: userInput })
+      });
+
+      const data = await response.json();
+
+      if (data.result) {
+        // Extract the content inside ["..."]
+        const match = data.result.match(/\["([\s\S]*?)"\]/);
+
+        if (match && match[1]) {
+            const rawText = match[1];
+            const cleanedText = rawText.replace(/\\"/g, '"');
+
+            const html = cleanedText
+            .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+            .split("\\n\\n")
+            .map(para => `<p>${para.replace(/\\n/g, "<br>")}</p>`)
+            .join("");
+
+          responseDiv.innerHTML = html;
+        } else {
+          responseDiv.innerHTML = "<em>⚠️ Could not find message in response.</em>";
+        }
+      } else {
+        responseDiv.textContent = "⚠️ Error:\n" + JSON.stringify(data, null, 2);
+      }
+    } catch (err) {
+      responseDiv.textContent = "❌ Failed to contact server: " + err.message;
+    }
+  }
+</script>
