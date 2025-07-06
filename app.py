@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app)
 
 # 🔐 Securely use your Vertex AI API Key
-genai.configure(api_key="a337713a7918e2cb7b3051b78e1e2b70524f6e17")
+genai.configure(api_key="changeme")
 
 # ✅ Create Gemini model instance
 model = genai.GenerativeModel("gemini-1.5-flash")
