@@ -18,7 +18,7 @@ genai.configure(api_key="changeme")
 model = genai.GenerativeModel("gemini-1.5-flash")
 chat = model.start_chat(history=[])
 
-send_to_pope_url = "https://genai-app-confess2pope-1-1749573826203-978054810878.us-central1.run.app/gradio_api/queue/join?key=loaidoqvd5spvcq1"
+send_to_pope_url = "https://genai-app-confess2pope-1-1749573826203-978054810878.us-central1.run.app/gradio_api/queue/join?key=changeme"
 get_from_pope_url = "https://genai-app-confess2pope-1-1749573826203-978054810878.us-central1.run.app/gradio_api/queue/data?session_hash="
 @app.route("/predict", methods=["POST"])
 def predict():
